@@ -1,0 +1,343 @@
+/* Items Page Wrapper */
+.items-page {
+  min-height: calc(100vh - 60px);
+  width: 100%;
+  background: #FFF5F2; /* Peach background */
+  padding: 2rem;
+  padding-top: 150px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Page Header */
+.page-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.page-head h1 {
+  color: #064232;
+  font-size: 2.25rem;
+  font-weight: 700;
+}
+
+/* New Item Button */
+.page-head .btn {
+  background: linear-gradient(45deg, #F5BABB, #B568F8); /* Peach to violet */
+  color: #FFF5F2;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  border: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  animation: coralGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes coralGlow {
+  0% { box-shadow: 0 0 5px #FF7F50, 0 0 10px #FF7F50; }
+  100% { box-shadow: 0 0 20px #FF7F50, 0 0 30px #FF7F50; }
+}
+
+.page-head .btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 18px rgba(6, 66, 50, 0.3);
+}
+
+
+/* 🌈 Select Store Type Card */
+.card {
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 18px;
+  padding: 1.8rem;
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(245, 186, 187, 0.5);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -60%;
+  width: 220%;
+  height: 220%;
+  background: radial-gradient(circle, rgba(255,127,80,0.3), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+}
+
+.card:hover::after {
+  opacity: 1;
+}
+/* Highlight for Select Store Type */
+.card h3 {
+  color: #064232;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, #F5BABB, #B568F8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 1px 8px rgba(181, 104, 248, 0.2);
+  letter-spacing: 0.5px;
+}
+
+/* 🔽 Store Type Dropdown + Search Input */
+.form-inline {
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  border: 2px solid rgba(181, 104, 248, 0.4);
+  font-size: 1rem;
+  font-weight: 500;
+  color: #064232;
+  outline: none;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Select box styling */
+select.form-inline {
+  cursor: pointer;
+  background: linear-gradient(45deg, #FFF, #FFECEC);
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23B568F8' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 16px 16px;
+  padding-right: 2.5rem;
+}
+
+.form-inline:focus {
+  border-color: #B568F8;
+  box-shadow: 0 0 10px rgba(181, 104, 248, 0.4);
+  background: #FFF;
+}
+
+/* Search input styling */
+input.form-inline {
+  width: 60%;
+  margin-top: 0.8rem;
+}
+
+input.form-inline::placeholder {
+  color: #7B8C89;
+}
+
+
+/* Grid Cards */
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.8rem;
+}
+
+/* Card */
+.card {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 18px;
+  padding: 1.8rem;
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(245, 186, 187, 0.5);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -60%;
+  width: 220%;
+  height: 220%;
+  background: radial-gradient(circle, rgba(255,127,80,0.3), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+}
+
+.card:hover::after {
+  opacity: 1;
+}
+
+.card strong {
+  display: block;
+  margin-bottom: 0.6rem;
+  color: #064232;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.card .muted {
+  font-size: 0.95rem;
+  color: #568F87;
+}
+
+.card .stat {
+  font-size: 1.1rem;
+  color: #064232;
+  font-weight: 500;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.card-title {
+  color: #064232;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.card-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+.card.expired {
+  border: 2px solid red;
+  opacity: 0.85;
+}
+
+.item-details {
+  text-align: left;
+  width: 100%;
+}
+
+.item-details .muted {
+  margin-bottom: 0.3rem;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* Buttons (including Manage and Delete) with outer impulse glow */
+.btn, .btn-ghost {
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  overflow: visible;
+  transition: all 0.4s ease;
+  text-decoration: none;
+}
+
+.btn::before, .btn-ghost::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle, rgba(255,127,80,0.4), transparent 70%);
+  border-radius: 12px;
+  transform: translate(-50%, -50%) scale(0.5);
+  opacity: 0;
+  z-index: -1;
+  transition: all 0.5s ease;
+  pointer-events: none;
+}
+
+.btn:hover::before, .btn-ghost:hover::before {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.btn {
+  background: linear-gradient(45deg, #F5BABB, #B568F8);
+  color: #FFF5F2;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #064232;
+  border: 2px solid #B568F8;
+}
+
+.btn-ghost:hover {
+  background: #B568F8;
+  color: #FFF5F2;
+}
+/* Existing styles... */
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  color: #064232;
+}
+
+.loading-text {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  color: #568F87;
+}
+/* Responsive */
+@media (max-width: 768px) {
+  .items-page {
+    padding-top: 70px;
+    padding: 1.5rem;
+  }
+
+  .grid-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 1.2rem;
+  }
+
+  .btn, .btn-ghost {
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .card-bottom {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .item-details .muted {
+    font-size: 0.9rem;
+  }
+
+  .card-actions {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+}
+
+
+
+

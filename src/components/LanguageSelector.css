@@ -1,0 +1,82 @@
+/* 🌸 Language Selector Styles - light pink theme */
+
+.lang-selector-wrapper {
+  position: relative;
+  display: inline-block;
+  font-family: "Poppins", sans-serif;
+}
+
+/* --- Button --- */
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff5f2;              /* light pink background */
+  color: #064232;                   /* dark green text */
+  border: 2px solid #f5babb;
+  border-radius: 14px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.lang-btn:hover {
+  background: #ffe9e5;
+  border-color: #f5babb;
+  transform: translateY(-2px);
+}
+
+/* Google icon */
+.google-icon {
+  color: #4285f4; /* blue of google G */
+  font-size: 1.2rem;
+}
+
+/* Arrow */
+.arrow {
+  font-size: 0.85rem;
+  color: #064232;
+}
+
+/* --- Dropdown --- */
+.lang-dropdown {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 200px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #f5babb;
+  border-radius: 14px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  padding: 8px 0;
+  margin: 8px 0 0;
+  z-index: 9999; /* enough for dropdown */
+  backdrop-filter: blur(8px);
+}
+
+.lang-dropdown li {
+  padding: 8px 14px;
+  cursor: pointer;
+  color: #064232;
+  transition: background 0.25s ease;
+}
+
+.lang-dropdown li:hover {
+  background: #fff5f2;
+  color: #b568f8; /* soft purple highlight */
+}
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+  .lang-btn {
+    padding: 7px 12px;
+    font-size: 0.9rem;
+  }
+
+  .lang-dropdown {
+    width: 170px;
+  }
+}

@@ -1,0 +1,160 @@
+/* 🌸 Background & Wrapper */
+.login-container {
+  min-height: calc(100vh - 60px);
+  background: #FFF5F2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Poppins", sans-serif;
+  padding-top: 60px;
+}
+
+/* 🧾 Form Card */
+.login-content {
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 22px;
+  padding: 2.5rem 3rem;
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 245, 242, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 420px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-content:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* 🏷️ Headings */
+.login-content h1 {
+  color: #064232;
+  font-weight: 700;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+/* ⚠️ Error Text */
+.error-text {
+  color: #ff5252;
+  font-size: 0.9rem;
+  margin-bottom: 0.8rem;
+}
+
+/* ✍️ Form Fields */
+.auth-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-form input {
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: 2px solid #f0d9d8;
+  outline: none;
+  font-size: 0.95rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.auth-form input:focus {
+  border-color: #b568f8;
+  box-shadow: 0 0 8px rgba(181, 104, 248, 0.3);
+}
+
+/* 🎨 Button */
+.auth-form button[type="submit"] {
+  background-color: #b568f8;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  margin-top: 0.3rem;
+  box-shadow: 0 4px 14px rgba(181, 104, 248, 0.2);
+}
+
+.auth-form button[type="submit"]:hover {
+  background-color: #9b44d4;
+  transform: scale(1.05);
+}
+
+/* 🧠 Google Button */
+.google-btn {
+  margin-top: 1rem;
+  width: 100%;
+  transition: transform 0.3s ease;
+}
+
+.google-btn:hover {
+  transform: scale(1.03);
+}
+
+/* 🔁 Navigation Links */
+.forgot-password {
+  margin-top: 1rem;
+  background: none;
+  border: none;
+  color: #064232;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.forgot-password:hover {
+  color: #9b44d4;
+}
+
+/* ✅ Toast */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-weight: 500;
+  color: white;
+  animation: fadeIn 0.4s ease;
+}
+
+.toast.success {
+  background-color: #4caf50;
+}
+
+.toast.error {
+  background-color: #f44336;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+  .login-content {
+    padding: 2rem;
+    width: 95%;
+  }
+
+  .auth-form input {
+    font-size: 0.9rem;
+  }
+
+  .auth-form button[type="submit"] {
+    font-size: 0.95rem;
+  }
+}

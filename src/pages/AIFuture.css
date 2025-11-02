@@ -1,0 +1,326 @@
+/* Page Wrapper */
+.ai-future-page {
+  min-height: calc(100vh - 60px);
+  width: 100%;
+  background: #FFF5F2;
+  padding: 2rem;
+  padding-top: 150px;
+  font-family: 'Poppins', sans-serif;
+  color: #222;
+}
+
+/* Headings */
+h1, h2, h3 {
+  color: #064232;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* Discount Config Input */
+.discount-config {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.discount-config input {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 2px solid #c8e0d0;
+  background: #ffffff;
+  font-weight: 500;
+  width: 80px;
+  color: #064232;
+  transition: all 0.3s ease;
+}
+
+.discount-config input:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 6px rgba(76, 175, 80, 0.4);
+}
+
+/* Sections Wrapper */
+.ai-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Alerts Section */
+.alerts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+/* Base Alert Card */
+.alert-card {
+  background: rgba(255, 235, 235, 0.6);
+  border: 2px solid #FF4C4C;
+  border-radius: 18px;
+  padding: 1.2rem;
+  color: #B22222;
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgba(255, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.alert-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 230, 230, 0.9);
+}
+
+/* EXPIRED ALERT (RED) */
+.alert-expired {
+  background: #ffe6e6 !important;
+  border-left: 6px solid #d32f2f !important;
+  color: #b71c1c !important;
+  font-weight: 700;
+}
+
+/* EXPIRING SOON ALERT (ORANGE) */
+.alert-expiring {
+  background: #fff3e0 !important;
+  border-left: 6px solid #f57c00 !important;
+  color: #e65100 !important;
+  font-weight: 700;
+}
+
+/* LOW STOCK ALERT (BLUE) */
+.alert-lowstock {
+  background: #e3f2fd !important;
+  border-left: 6px solid #1976d2 !important;
+  color: #0d47a1 !important;
+  font-weight: 600;
+}
+
+/* SLOW SALES ALERT (PURPLE) */
+.alert-slow {
+  background: #f3e5f5 !important;
+  border-left: 6px solid #7b1fa2 !important;
+  color: #4a148c !important;
+  font-weight: 600;
+}
+
+/* Text Colors in Table */
+.text-red {
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+.text-orange {
+  color: #f57c00;
+  font-weight: bold;
+}
+
+.text-green {
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+/* Discount Table */
+.discount-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.discount-table th {
+  background: #064232;
+  color: white;
+  font-weight: 600;
+  padding: 12px;
+  text-align: center;
+}
+
+.discount-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  text-align: center;
+  color: #333;
+  font-weight: 500;
+}
+
+.discount-table tr:hover {
+  background: rgba(245, 186, 187, 0.15);
+}
+
+/* Input in Table */
+.discount-table input[type="number"] {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 70px;
+  font-weight: 500;
+  color: #064232;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.discount-table input[type="number"]:focus {
+  border-color: #4CAF50;
+  outline: none;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+/* Apply Button */
+.apply-btn {
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.apply-btn:hover {
+  background: linear-gradient(135deg, #45A049, #1B5E20);
+  transform: translateY(-2px);
+}
+
+.apply-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Delete Button */
+.delete-btn {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+  background: linear-gradient(135deg, #c0392b, #992d22);
+  transform: translateY(-2px);
+}
+
+/* Insights Box */
+.insights-box {
+  background: rgba(77, 124, 254, 0.1);
+  border-left: 6px solid #4D7CFE;
+  padding: 1.5rem;
+  border-radius: 14px;
+  font-weight: 500;
+  color: #0645AD;
+  box-shadow: 0 6px 20px rgba(77, 124, 254, 0.1);
+}
+
+/* RESTOCK LIST - FULLY STYLED IN YOUR DESIGN LANGUAGE */
+.restock-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.restock-item {
+  background: rgba(255, 248, 225, 0.7);
+  border: 2px solid #ff9800;
+  border-left: 8px solid #ff6d00;
+  border-radius: 16px;
+  padding: 1.2rem;
+  font-weight: 500;
+  color: #e65100;
+  box-shadow: 0 6px 18px rgba(255, 152, 0, 0.15);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+.restock-item:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 245, 210, 0.9);
+  box-shadow: 0 8px 22px rgba(255, 152, 0, 0.2);
+}
+
+.restock-item strong {
+  color: #d84315;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.restock-item .muted {
+  color: #bf360c;
+  font-size: 0.9rem;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* Muted Text */
+.muted {
+  color: #777;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* Hover Glow on Sections */
+section {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+section:hover {
+  transform: translateY(-4px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .discount-table th,
+  .discount-table td {
+    padding: 10px 6px;
+    font-size: 14px;
+  }
+
+  .apply-btn, .delete-btn {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+
+  .discount-config {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .alerts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .restock-item {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+}
+.delete-btn {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+  background: linear-gradient(135deg, #c0392b, #992d22);
+  transform: translateY(-2px);
+}

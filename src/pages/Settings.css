@@ -1,0 +1,178 @@
+.settings-page {
+  min-height: calc(100vh - 60px);
+  width: 100%;
+  background: #FFF5F2; /* Peach background */
+  padding: 2rem;
+  padding-top: 150px; /* Sticky navbar offset */
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Headings */
+h1 {
+  color: #064232; /* Dark green */
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+/* Card Style */
+.card {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 18px;
+  padding: 1.8rem;
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(245, 186, 187, 0.5); /* Peach accent */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+  border-color: #F5BABB;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -60%;
+  width: 220%;
+  height: 220%;
+  background: radial-gradient(circle, rgba(255, 127, 80, 0.3), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none; /* <-- FIX */
+}
+
+.card:hover::after {
+  opacity: 1;
+}
+
+/* Form Rows */
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.form-row .label {
+  flex: 1;
+  font-weight: 500;
+  color: #B568F8; /* Violet */
+}
+
+.form-row input[type="email"],
+.form-row input[type="tel"] {
+  flex: 2;
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  border: 2px solid #F5BABB;
+  outline: none;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-row input[type="email"]:focus,
+.form-row input[type="tel"]:focus {
+  border-color: #B568F8;
+  box-shadow: 0 0 10px #B568F8;
+}
+
+.form-row input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+}
+
+/* Buttons */
+.form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.btn {
+  background: linear-gradient(45deg, #F5BABB, #B568F8);
+  color: #FFF5F2;
+  padding: 0.75rem 1.7rem;
+  border-radius: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  animation: coralGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes coralGlow {
+  0% { box-shadow: 0 0 5px #FF7F50, 0 0 10px #FF7F50; }
+  100% { box-shadow: 0 0 20px #FF7F50, 0 0 30px #FF7F50; }
+}
+
+.btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 18px rgba(6, 66, 50, 0.3);
+}
+
+.btn:disabled {
+  background: #568F87;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Loading State */
+.card.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .settings-page {
+    padding-top: 70px;
+    padding: 1.5rem;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  .form-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-row input[type="email"],
+  .form-row input[type="tel"] {
+    width: 100%;
+  }
+}
+
+
+.alert-preview {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 8px;
+  background: #fafafa;
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 1rem;
+}
+
+.btn.secondary {
+  background: #6c63ff;
+  color: white;
+  transition: 0.2s;
+}
+
+.btn.secondary:hover {
+  background: #574bff;
+}

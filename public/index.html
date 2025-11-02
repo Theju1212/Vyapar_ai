@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>VyapaarAI</title>
+    <link rel="icon" type="image/png" href="%PUBLIC_URL%/favicon1.png" />
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- Google Translate -->
+    <div id="google_translate_element" style="display:none"></div>
+
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+          pageLanguage: 'en',
+          includedLanguages: 'en,hi,ta,bn,gu,mr,kn,ml,te,ur,as,ne,pa,or'
+        }, 'google_translate_element');
+      }
+    </script>
+    <script
+      type="text/javascript"
+      src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+    </script>
+
+    <!-- jsPDF + autoTable (MUST BE IN THIS ORDER) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+  </body>
+</html>

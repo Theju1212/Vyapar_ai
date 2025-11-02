@@ -1,0 +1,186 @@
+/* 🌸 Global Auth Page Styling */
+body {
+  background: #FFF5F2;
+  font-family: 'Poppins', sans-serif;
+  color: #064232;
+  margin: 0;
+  padding: 0;
+}
+
+/* 🌿 Auth Container */
+.login-container {
+  min-height: calc(100vh - 60px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #FFF5F2;
+  padding: 2rem;
+}
+
+/* 🌈 Auth Form Card */
+.auth-form {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(18px);
+  border-radius: 25px;
+  padding: 2.5rem 3rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  border: 2px solid rgba(255, 245, 242, 0.6);
+  text-align: center;
+  width: 100%;
+  max-width: 420px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-form:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+/* 🌼 Headings & Text */
+.auth-form h1 {
+  font-size: 2rem;
+  color: #064232;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.sub-text {
+  color: #568F87;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.error-text {
+  color: #d9534f;
+  background: #ffe6e6;
+  padding: 0.4rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+/* 🌸 Inputs */
+.auth-form input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  border: 2px solid rgba(181, 104, 248, 0.25);
+  background: rgba(255,255,255,0.9);
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.auth-form input:focus {
+  border-color: #B568F8;
+  box-shadow: 0 0 8px rgba(181, 104, 248, 0.4);
+}
+
+/* 🌟 Buttons */
+button {
+  font-family: inherit;
+}
+
+.login-btn,
+.auth-form button[type="submit"] {
+  background-color: #B568F8;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  width: 100%;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 5px 15px rgba(181, 104, 248, 0.25);
+}
+
+.login-btn:hover,
+.auth-form button[type="submit"]:hover {
+  background-color: #9b44d4;
+  transform: scale(1.05);
+}
+
+.login-btn:active,
+.auth-form button[type="submit"]:active {
+  transform: scale(0.97);
+}
+
+/* 🔁 Forgot Password & Register Links */
+.forgot-password {
+  background: transparent;
+  color: #9b44d4;
+  border: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.forgot-password:hover {
+  color: #B568F8;
+  text-decoration: underline;
+}
+
+.register-text {
+  font-size: 0.9rem;
+  color: #064232;
+  margin-top: 1rem;
+}
+
+.register-text span {
+  color: #B568F8;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.register-text span:hover {
+  color: #9b44d4;
+}
+
+/* 💬 Toast Notifications */
+.toast {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-weight: 500;
+  color: white;
+  z-index: 1000;
+  animation: slideUp 0.4s ease;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.toast.success {
+  background-color: #4BB543;
+}
+
+.toast.error {
+  background-color: #D9534F;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 📱 Responsive */
+@media (max-width: 600px) {
+  .auth-form {
+    padding: 2rem;
+    max-width: 90%;
+  }
+
+  .auth-form h1 {
+    font-size: 1.6rem;
+  }
+
+  .auth-form input {
+    font-size: 0.9rem;
+  }
+}

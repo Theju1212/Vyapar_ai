@@ -1,0 +1,124 @@
+.newitem-page {
+  min-height: calc(100vh - 60px); /* Navbar offset */
+  width: 100%;
+  background: #FFF5F2; /* Peach background */
+  padding: 2rem;
+  padding-top: 60px;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Headings */
+h1 {
+  color: #064232;
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+/* Card/Form */
+.card.form {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 22px;
+  padding: 2rem;
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(245, 186, 187, 0.4);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+}
+
+.card.form:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+  border-color: #F5BABB;
+}
+
+.card.form::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -60%;
+  width: 220%;
+  height: 220%;
+  background: radial-gradient(circle, rgba(255,127,80,0.3), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none; /* <-- FIX */
+}
+
+.card.form:hover::after {
+  opacity: 1;
+}
+
+/* Form Labels */
+.card.form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  color: #064232;
+}
+
+.card.form small {
+  color: #568F87;
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+/* Inputs */
+.card.form input {
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  border: 2px solid #F5BABB;
+  outline: none;
+  font-size: 1rem;
+  margin-top: 0.3rem;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card.form input:focus {
+  border-color: #B568F8;
+  box-shadow: 0 0 10px #B568F8;
+}
+
+/* Buttons */
+.btn {
+  background: linear-gradient(45deg, #F5BABB, #B568F8);
+  color: #FFF5F2;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  animation: coralGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes coralGlow {
+  0% { box-shadow: 0 0 5px #FF7F50, 0 0 10px #FF7F50; }
+  100% { box-shadow: 0 0 20px #FF7F50, 0 0 30px #FF7F50; }
+}
+
+.btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 18px rgba(6,66,50,0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .newitem-page {
+    padding-top: 70px;
+    padding: 1.5rem;
+  }
+
+  h1 { font-size: 1.8rem; }
+
+  .card.form {
+    padding: 1.5rem;
+  }
+}
