@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthContext } from "./context/AuthContext";
 
-// 🔹 Page imports
+// Pages
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
@@ -16,16 +16,30 @@ import Festivals from "./pages/Festivals";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
-// 🔹 Component imports
+// Components
 import Navbar from "./components/Navbar";
 import Chatbot from "./components/Chatbot";
 import { Toaster } from "react-hot-toast";
 import CustomToaster from "./components/CustomToaster";
 
-// 🔒 Private Route Wrapper
+// 🔒 Updated Private Route Wrapper
 function Private({ children }) {
-  const { token } = useContext(AuthContext);
-  if (!token) return <Navigate to="/login" replace />;
+  const { token, loading } = useContext(AuthContext);
+
+  // Wait until AuthContext finishes reading localStorage
+  if (loading) {
+    return (
+      <div style={{ textAlign: "center", marginTop: "40px", fontSize: "18px" }}>
+        Loading...
+      </div>
+    );
+  }
+
+  // No token → go to login
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
   return children;
 }
 
@@ -33,7 +47,7 @@ export default function App() {
   const { token } = useContext(AuthContext);
   const location = useLocation();
 
-  // 🔹 Hide navbar on auth-related routes
+  // Pages where navbar is hidden
   const hideNavbar = [
     "/login",
     "/register",
@@ -41,7 +55,7 @@ export default function App() {
     "/reset-password",
   ].some((path) => location.pathname.startsWith(path));
 
-  // 🌍 Load Google Translate Script once
+  // Load Google Translate widget only once
   useEffect(() => {
     if (!window.google || !window.google.translate) {
       const script = document.createElement("script");
@@ -53,10 +67,10 @@ export default function App() {
 
   return (
     <div className="app-root">
-      {/* ✅ Global Navbar (hidden on auth pages) */}
+      {/* Navbar only on private pages */}
       {!hideNavbar && <Navbar />}
 
-      {/* ✅ Page content */}
+      {/* Page Content */}
       <main
         style={{
           width: "100%",
@@ -83,12 +97,12 @@ export default function App() {
           <Route path="/ai-future" element={<Private><AIFuture /></Private>} />
           <Route path="/festivals" element={<Private><Festivals /></Private>} />
 
-          {/* 404 Fallback */}
+          {/* 404 */}
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </main>
 
-      {/* ✅ Toasts and Chatbot */}
+      {/* Toast + Chatbot */}
       <Toaster position="top-right" />
       <CustomToaster />
       {token && <Chatbot />}
