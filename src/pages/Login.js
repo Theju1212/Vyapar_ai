@@ -29,7 +29,7 @@ const Login = () => {
       const res = await API.post("/auth/login", form);
       login(res.data.token, res.data.user);
       showToast("✅ Login successful!", "success");
-      setTimeout(() => navigate("/dashboard"), 1500);
+      navigate("/dashboard");
     } catch (err) {
       showToast(err.response?.data?.message || "❌ Invalid credentials", "error");
       setError(err.response?.data?.message || "Invalid credentials");

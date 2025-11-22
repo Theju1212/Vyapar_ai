@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import client from '../api/client';
+import API from '../utils/api';   // ✅ FIXED IMPORT
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   BarChart, Bar, PieChart, Pie, Cell
@@ -13,47 +13,46 @@ export default function Dashboard() {
   const [showCharts, setShowCharts] = useState(false);
   const navigate = useNavigate();
 
-  // 🔹 Function to trigger alerts manually on page load
+  // 🔹 Trigger alert once when dashboard mounts
   async function triggerAlertsManually() {
     try {
-      await client.get("/test-alerts");
+      await API.get("/test-alerts");   // ✅ FIXED
       console.log("Manual alert sent ✅");
     } catch (err) {
       console.warn("Manual alert trigger failed", err);
     }
   }
 
-  // 🔹 Trigger alert once when dashboard mounts
   useEffect(() => {
     triggerAlertsManually();
   }, []);
 
-  // Fetch items and sales
+  // Fetch items & sales
   const itemsQ = useQuery({
     queryKey: ['dashboardItems'],
-    queryFn: async () => (await client.get('/items')).data
+    queryFn: async () => (await API.get('/items')).data   // ✅ FIXED
   });
 
   const salesQ = useQuery({
     queryKey: ['dashboardSales'],
-    queryFn: async () => (await client.get('/sales')).data
+    queryFn: async () => (await API.get('/sales')).data   // ✅ FIXED
   });
 
   const { data: salesTrend = [] } = useQuery({
     queryKey: ['salesTrend'],
-    queryFn: async () => (await client.get('/analytics/sales-trend')).data,
+    queryFn: async () => (await API.get('/analytics/sales-trend')).data,   // ✅ FIXED
     enabled: showCharts
   });
 
   const { data: topItems = [] } = useQuery({
     queryKey: ['topItems'],
-    queryFn: async () => (await client.get('/analytics/top-items')).data,
+    queryFn: async () => (await API.get('/analytics/top-items')).data,     // ✅ FIXED
     enabled: showCharts
   });
 
   const { data: lowestStock = {} } = useQuery({
     queryKey: ['lowestStock'],
-    queryFn: async () => (await client.get('/analytics/lowest-stock')).data,
+    queryFn: async () => (await API.get('/analytics/lowest-stock')).data,  // ✅ FIXED
     enabled: showCharts
   });
 
@@ -72,6 +71,7 @@ export default function Dashboard() {
   const aiAlerts = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+
     return items
       .map(item => {
         const alerts = [];
@@ -122,9 +122,6 @@ export default function Dashboard() {
     <div className="dashboard-page">
       <h1>Dashboard</h1>
 
-      {/* 🔹 Removed StoreSelector Section */}
-
-      {/* Summary Cards */}
       <div className="grid-3">
         <div className="card">
           <h3>Total item types</h3>
@@ -139,7 +136,6 @@ export default function Dashboard() {
           >
             {showCharts ? 'Hide Insights' : 'See Insights'}
           </button>
-          <div className="muted">Click to view sales & stock charts</div>
         </div>
 
         <div className="card">
@@ -245,7 +241,6 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Charts Grid */}
             <div className="charts">
               <div className="chart-card card">
                 <h3>Sales Trend (Last 7 Days)</h3>
