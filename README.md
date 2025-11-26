@@ -1,70 +1,104 @@
-# Getting Started with Create React App
+✅ 1. README for Frontend (Vyapar_ai — Client)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+📌 Repo: https://github.com/Theju1212/Vyapar_ai
 
-## Available Scripts
+VyapaarAI — Frontend (React)
 
-In the project directory, you can run:
+Smart AI-powered dashboard for Kirana shops and small businesses.
+This frontend provides interfaces for inventory tracking, AI chatbot, stock alerts, expiry alerts, analytics dashboards, and daily PDF report generation.
 
-### `npm start`
+📌 Features (Frontend)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+AI Chatbot (English)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Inventory management UI
 
-### `npm test`
+Alerts for low stock & expiry
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Daily insights dashboard
 
-### `npm run build`
+Sales analytics charts (Bar, Line, Pie)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Multilingual support
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Seamless communication with backend AI Engine
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+🛠️ Tech Stack
+Category	Tools
+Frontend Framework	React.js
+State Management	useState, useMemo
+UI / Animations	Custom CSS, Framer Motion
+API Handling	Axios
+Charts	Recharts
+Multilingual Chatbot	OpenAI / NLP APIs (via backend)
+📁 Project Structure
+Vyapar_ai/
+│── public/
+│── src/
+│   ├── components/
+│   ├── pages/
+│   ├── context/
+│   ├── hooks/
+│   ├── utils/
+│   ├── assets/
+│   └── App.jsx
+│
+└── package.json
 
-### `npm run eject`
+🚀 Getting Started
+1️⃣ Install dependencies
+npm install
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2️⃣ Create .env file
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Create a file:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+VITE_BACKEND_URL=http://localhost:5000
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+(Use your actual backend URL.)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+3️⃣ Run development server
+npm run dev
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+Frontend runs at:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+http://localhost:5173
 
-### Analyzing the Bundle Size
+🔗 Backend Connection
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+The frontend connects with the backend here:
+src/utils/api.js → uses Axios baseURL from the .env.
 
-### Making a Progressive Web App
+🤖 AI Features (Handled via Backend)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Frontend triggers backend AI routes for:
 
-### Advanced Configuration
+Stock prediction
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Expiry alerts
 
-### Deployment
+Chatbot responses
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Automatic report generation
 
-### `npm run build` fails to minify
+📸 Screenshots
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Add these screenshots from your slides:
+
+Architecture
+
+Technical Approach
+
+AI Integration
+
+Impact & Benefits
+
+Place inside:
+
+/docs/images/
+
+📄 License
+
+MIT License.
