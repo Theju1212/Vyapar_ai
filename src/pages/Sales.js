@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import client from '../api/client';
+import API from '../utils/api';
 import './Sales.css';
 
 export default function Sales() {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['sales'],
     queryFn: async () => {
-      const res = await client.get('/sales');
+      const res = await API.get('/sales');
       return res.data;
     }
   });
@@ -34,7 +34,6 @@ export default function Sales() {
   const sales = Array.isArray(data) ? data : (data.sales || []);
   const filteredSales = sales.filter(s => s.itemId);
 
-  // Group by itemId
   const salesByItem = {};
   filteredSales.forEach(s => {
     const itemId = s.itemId._id;
@@ -75,21 +74,22 @@ export default function Sales() {
         )}
       </div>
 
-      {/* History Modal */}
       {selectedItem && (
         <div className="modal-backdrop" onClick={() => setSelectedItem(null)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
             <h2>Sales History: {salesByItem[selectedItem][0]?.itemId?.name}</h2>
             <div className="history-list">
-              {salesByItem[selectedItem].sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).map(s => (
-                <div key={s._id || s.id} className="card small">
-                  <div className="muted">{new Date(s.createdAt).toLocaleString()}</div>
-                  <div>Qty: {s.quantity}</div>
-                  {s.itemId?.sku && <div className="muted">SKU: {s.itemId.sku}</div>}
-                  {new Date(s.createdAt).toDateString() === today && (
-                    <div className="badge-today-small">Today</div>
-                  )}
-                </div>
+              {salesByItem[selectedItem]
+                .sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))
+                .map(s => (
+                  <div key={s._id || s.id} className="card small">
+                    <div className="muted">{new Date(s.createdAt).toLocaleString()}</div>
+                    <div>Qty: {s.quantity}</div>
+                    {s.itemId?.sku && <div className="muted">SKU: {s.itemId.sku}</div>}
+                    {new Date(s.createdAt).toDateString() === today && (
+                      <div className="badge-today-small">Today</div>
+                    )}
+                  </div>
               ))}
             </div>
             <button className="close-btn" onClick={() => setSelectedItem(null)}>Close</button>

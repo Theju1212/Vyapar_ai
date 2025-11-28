@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import client from '../api/client';
+import API from '../utils/api';
 import toast from 'react-hot-toast';
 import './AIFuture.css';
 
@@ -18,7 +18,7 @@ export default function AIFuture() {
   } = useQuery({
     queryKey: ['aiSuggestions', userDiscountDefault],
     queryFn: async () =>
-      (await client.post('/ai/suggestions', {
+      (await API.post('/ai/suggestions', {
         userDiscountConfig: { defaultDiscount: userDiscountDefault, maxDiscount: 50 }
       })).data,
     keepPreviousData: true,
@@ -36,7 +36,7 @@ export default function AIFuture() {
   // === ALL SALES ===
   const { data: allSales = [] } = useQuery({
     queryKey: ['allSales'],
-    queryFn: async () => (await client.get('/sales')).data,
+    queryFn: async () => (await API.get('/sales')).data,
     keepPreviousData: true,
     staleTime: 2 * 60 * 1000
   });
@@ -44,7 +44,7 @@ export default function AIFuture() {
   // === ALL ITEMS ===
   const { data: allItems = [] } = useQuery({
     queryKey: ['allItems'],
-    queryFn: async () => (await client.get('/items')).data,
+    queryFn: async () => (await API.get('/items')).data,
     keepPreviousData: true,
     staleTime: 2 * 60 * 1000
   });
@@ -52,7 +52,7 @@ export default function AIFuture() {
   // === APPLY DISCOUNT ===
   const applyDiscountMutation = useMutation({
     mutationFn: async ({ itemId, discountPercent, applyQty }) =>
-      (await client.post('/ai/apply-discount', { itemId, discountPercent, applyQty })).data,
+      (await API.post('/ai/apply-discount', { itemId, discountPercent, applyQty })).data,
     onSuccess: (data, variables) => {
       qc.invalidateQueries({ queryKey: ['aiSuggestions', userDiscountDefault] });
       qc.invalidateQueries({ queryKey: ['allItems'] });
@@ -202,7 +202,6 @@ export default function AIFuture() {
       .sort((a, b) => a.daysToOut - b.daysToOut);
   }, [allItems, allSales]);
 
-  // === RESTOCK TODAY ===
   const restockSuggestions = useMemo(() => {
     return futurePredictions
       .filter(p => p.daysToOut <= 3 && p.currentStock > 0)
@@ -224,7 +223,6 @@ export default function AIFuture() {
     const today = new Date().toLocaleDateString();
     let y = 20;
 
-    // Title
     doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
     doc.text('Daily AI Store Report', 14, y);
@@ -234,7 +232,6 @@ export default function AIFuture() {
     doc.text(`Generated: ${new Date().toLocaleString()}`, 14, y);
     y += 15;
 
-    // 1. Alerts
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.text('1. Alerts', 14, y);
@@ -251,7 +248,6 @@ export default function AIFuture() {
       y += 10;
     }
 
-    // 2. Stock Running Low
     if (stockForecast.length) {
       doc.setFontSize(14);
       doc.setFont('helvetica', 'bold');
@@ -275,7 +271,6 @@ export default function AIFuture() {
       y = doc.lastAutoTable.finalY + 15;
     }
 
-    // 3. Discount Suggestions
     if (expiryItems.length) {
       doc.setFontSize(14);
       doc.setFont('helvetica', 'bold');
@@ -297,7 +292,6 @@ export default function AIFuture() {
       y = doc.lastAutoTable.finalY + 15;
     }
 
-    // 4. Restock Today
     if (restockSuggestions.length) {
       doc.setFontSize(14);
       doc.setFont('helvetica', 'bold');
@@ -313,21 +307,18 @@ export default function AIFuture() {
       });
     }
 
-    // Generate Blob + URL
     const pdfBlob = doc.output('blob');
     const pdfUrl = URL.createObjectURL(pdfBlob);
     setPdfBlobUrl(pdfUrl);
     toast.success('PDF Ready! Download or Share.');
   };
 
-  // === SHARE ON WHATSAPP (Clean URL Only) ===
   const shareOnWhatsApp = () => {
     if (!pdfBlobUrl) return toast.error('Generate PDF first!');
     window.open(`whatsapp://send?text=${encodeURIComponent(pdfBlobUrl)}`);
     toast.success('Opening WhatsApp...');
   };
 
-  // === AUTO CLEANUP BLOB URL ===
   useEffect(() => {
     return () => {
       if (pdfBlobUrl) {
@@ -351,7 +342,6 @@ export default function AIFuture() {
 
       <div className="ai-sections">
 
-        {/* 1. ALERTS */}
         <section>
           <h2>Alerts</h2>
           <div className="alerts-grid">
@@ -368,7 +358,6 @@ export default function AIFuture() {
           </div>
         </section>
 
-        {/* 2. STOCK RUNNING LOW */}
         <section>
           <h2>Stock Running Low</h2>
           {stockForecast.length > 0 ? (
@@ -389,7 +378,6 @@ export default function AIFuture() {
           ) : <p>No items sold in last 7 days.</p>}
         </section>
 
-        {/* 3. DISCOUNT SUGGESTIONS */}
         <section>
           <h2>Discount Suggestions (Expiry Items)</h2>
           {expiryItems.length > 0 ? (
@@ -411,7 +399,6 @@ export default function AIFuture() {
           ) : <p>No expiry items need discount.</p>}
         </section>
 
-        {/* 4. APPLIED DISCOUNTS */}
         <section>
           <h2>Applied Discounts</h2>
           {appliedDiscounts.length > 0 ? (
@@ -432,7 +419,6 @@ export default function AIFuture() {
           ) : <p className="muted">No discounts applied yet.</p>}
         </section>
 
-        {/* 5. FUTURE SALES */}
         <section>
           <h2>Future Sales Predictions (Next 7 Days)</h2>
           {futurePredictions.length > 0 ? (
@@ -453,7 +439,6 @@ export default function AIFuture() {
           ) : <p>No sales data to predict.</p>}
         </section>
 
-        {/* 6. RESTOCK TODAY */}
         <section>
           <h2>What to Restock Today</h2>
           {restockSuggestions.length > 0 ? (
@@ -468,7 +453,6 @@ export default function AIFuture() {
           ) : <p className="muted">No urgent restock needed today.</p>}
         </section>
 
-        {/* PDF BUTTONS AT THE END */}
         <section style={{ textAlign: 'center', marginTop: '2rem' }}>
           <button
             onClick={generatePDF}

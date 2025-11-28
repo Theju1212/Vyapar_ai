@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import client from "../api/client";
+import API from "../utils/api";
 import toast from "react-hot-toast";
 import "./Settings.css";
 
@@ -13,12 +13,11 @@ export default function Settings() {
   const [saving, setSaving] = useState(false);
   const [sendingAlert, setSendingAlert] = useState(false);
 
-  // 🔹 Load Settings + Last Alert
   async function loadSettingsAndAlerts() {
     try {
       const [settingsRes, alertsRes] = await Promise.all([
-        client.get("/stores/settings"),
-        client.get("/stores/alerts"),
+        API.get("/stores/settings"),
+        API.get("/stores/alerts"),
       ]);
 
       const settings = settingsRes.data?.settings || {};
@@ -39,14 +38,12 @@ export default function Settings() {
     loadSettingsAndAlerts();
   }, []);
 
-  // 🔹 Manual Alert Trigger
   async function triggerAlertsManually() {
     setSendingAlert(true);
     try {
-      const res = await client.get("/test-alerts");
+      const res = await API.get("/test-alerts");
       if (res.data?.success) {
         toast.success("📨 Alert email sent successfully!");
-        // reload latest alert copy from DB
         await loadSettingsAndAlerts();
       } else {
         toast.error("Failed to send alert email");
@@ -59,12 +56,11 @@ export default function Settings() {
     }
   }
 
-  // 🔹 Save Settings
   async function save(e) {
     e.preventDefault();
     setSaving(true);
     try {
-      await client.put("/stores/settings", {
+      await API.put("/stores/settings", {
         autoRefill,
         notificationEmail,
         notificationPhone,
@@ -136,7 +132,6 @@ export default function Settings() {
         </form>
       </div>
 
-      {/* 🧠 ALERT COPY DISPLAY */}
       <div className="card" style={{ marginTop: "2rem" }}>
         <h2>📩 Latest Email Alert</h2>
         {lastAlertDate && (

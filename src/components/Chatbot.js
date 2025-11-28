@@ -362,7 +362,8 @@ const Chatbot = () => {
     const { token } = useContext(AuthContext);
 
     // Your server is running on port 5000
-    const backendApiUrl = 'http://localhost:5000/api/chat';
+    const backendApiUrl = 'https://statelevel-backend.onrender.com/api/chat';
+
 
     // Inject CSS into the document head
     useEffect(() => {
