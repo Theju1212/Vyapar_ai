@@ -1,3 +1,4 @@
+// src/pages/Login.jsx
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../utils/api";
@@ -12,27 +13,29 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
-  // ✅ Toast Notification
+  // Toast
   const showToast = (message, type = "success") => {
     setToast({ message, type });
     setTimeout(() => setToast({ message: "", type: "" }), 3000);
   };
 
-  // ✅ Handle Input Change
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  // ✅ Handle Form Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await API.post("/auth/login", form);
+
+      // backend returns: { token, user }
       login(res.data.token, res.data.user);
+
       showToast("✅ Login successful!", "success");
       navigate("/dashboard");
     } catch (err) {
-      showToast(err.response?.data?.message || "❌ Invalid credentials", "error");
-      setError(err.response?.data?.message || "Invalid credentials");
+      const msg = err.response?.data?.message || "❌ Invalid credentials";
+      showToast(msg, "error");
+      setError(msg);
     }
   };
 
@@ -41,22 +44,19 @@ const Login = () => {
       <Navbar />
 
       <div className="login-container">
-        {/* ✅ GIF Animation Section */}
-      <div className="lottie-section">
-  <img
-    src={`${process.env.PUBLIC_URL}/assets/lottie/shopping-cart-load-2.gif`}
-    alt="Loading Animation"
-    style={{
-      width: 300,
-      height: 300,
-      marginLeft: "-60px", // 👈 shifts GIF slightly left
-      objectFit: "contain",
-    }}
-  />
-</div>
+        <div className="lottie-section">
+          <img
+            src={`${process.env.PUBLIC_URL}/assets/lottie/shopping-cart-load-2.gif`}
+            alt="Loading Animation"
+            style={{
+              width: 300,
+              height: 300,
+              marginLeft: "-60px",
+              objectFit: "contain",
+            }}
+          />
+        </div>
 
-
-        {/* ✅ Login Form Section */}
         <div className="login-content auth-form">
           <h1>Welcome Back 👋</h1>
           <p className="sub-text">Login to continue managing your store</p>
@@ -98,7 +98,6 @@ const Login = () => {
         </div>
       </div>
 
-      {/* ✅ Toast Message */}
       {toast.message && (
         <div className={`toast ${toast.type}`}>{toast.message}</div>
       )}

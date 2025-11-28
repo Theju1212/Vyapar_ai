@@ -1,6 +1,7 @@
+// src/pages/Items.jsx
 import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import client from '../api/client';
+import API from '../utils/api';     // ← FIXED
 import ItemCard from '../components/ItemCard';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -22,7 +23,7 @@ export default function Items() {
   const qc = useQueryClient();
 
   const fetchItems = async () => {
-    const res = await client.get('/items');
+    const res = await API.get('/items');   // ← FIXED
     return res.data;
   };
 
@@ -47,91 +48,84 @@ export default function Items() {
     .filter(i => !i.userCreated && i.storeType === storeType)
     .forEach(i => storeItemsMap.set(i.name.toLowerCase(), i));
 
-defaultItems[storeType].forEach(name => {
-  if (!storeItemsMap.has(name.toLowerCase())) {
-    // Randomly assign expiry date: today, tomorrow, or in 2–3 days
-    const today = new Date();
-    const randomOffset = Math.floor(Math.random() * 5) - 1; 
-    // gives values from -1 to +3 (so some expired, some expiring soon)
-    const expiryDate = new Date(today);
-    expiryDate.setDate(today.getDate() + randomOffset);
+  defaultItems[storeType].forEach(name => {
+    if (!storeItemsMap.has(name.toLowerCase())) {
+      const today = new Date();
+      const randomOffset = Math.floor(Math.random() * 5) - 1;
+      const expiryDate = new Date(today);
+      expiryDate.setDate(today.getDate() + randomOffset);
 
-    storeItemsMap.set(name.toLowerCase(), {
-      _id: `default-${storeType}-${name}`,
-      name,
-      sku: '-',
-      rack: 'R1',
-      totalStock: 0,
-      rackStock: 0,
-      threshold: 10,
-      userCreated: false,
-      storeType,
-      expiryDate: expiryDate.toISOString().slice(0, 10) // ✅ Added
-    });
-  }
-});
-
+      storeItemsMap.set(name.toLowerCase(), {
+        _id: `default-${storeType}-${name}`,
+        name,
+        sku: '-',
+        rack: 'R1',
+        totalStock: 0,
+        rackStock: 0,
+        threshold: 10,
+        userCreated: false,
+        storeType,
+        expiryDate: expiryDate.toISOString().slice(0, 10)
+      });
+    }
+  });
 
   const storeItems = Array.from(storeItemsMap.values())
     .filter(i => !search || i.name.toLowerCase().includes(search.toLowerCase()));
 
-// Inside computeAlerts function, ADD THIS:
-const computeAlerts = (item) => {
-  const alerts = [];
+  const computeAlerts = (item) => {
+    const alerts = [];
 
-  // Low stock
-  if ((item.rackStock ?? 0) <= (item.threshold ?? 0)) {
-    alerts.push(<span key="low" style={{ color: 'red' }}>Low Stock Warning</span>);
-  }
-
-  // Expiry
-  if (item.expiryDate) {
-    const today = new Date(); today.setHours(0,0,0,0);
-    const expiry = new Date(item.expiryDate); expiry.setHours(0,0,0,0);
-    const diffDays = Math.floor((expiry - today)/(1000*60*60*24));
-
-    if (diffDays < 0) {
-      alerts.push(<span key="expired" style={{ color: 'black' }}>Expired Alert</span>);
-    } else if (diffDays === 0) {
-      alerts.push(<span key="today" style={{ color: 'red' }}>Expires Today Warning</span>);
-    } else if (diffDays <= 3) {
-      alerts.push(<span key="soon" style={{ color: 'orange' }}>Expiring Soon Clock</span>);
+    if ((item.rackStock ?? 0) <= (item.threshold ?? 0)) {
+      alerts.push(<span key="low" style={{ color: 'red' }}>Low Stock Warning</span>);
     }
-  }
 
-  // DISCOUNT TAG WITH ICON
-  if (item.discountQty > 0) {
-    let tagText = '';
-    if (item.discountQty === 1) {
-      tagText = `Discounted ${item.discountPercent}%`;
-    } else {
-      const free = item.discountQty - 1;
-      tagText = `Buy 1 Get ${free} Free`;
+    if (item.expiryDate) {
+      const today = new Date(); today.setHours(0,0,0,0);
+      const expiry = new Date(item.expiryDate); expiry.setHours(0,0,0,0);
+      const diffDays = Math.floor((expiry - today)/(1000*60*60*24));
+
+      if (diffDays < 0) {
+        alerts.push(<span key="expired" style={{ color: 'black' }}>Expired Alert</span>);
+      } else if (diffDays === 0) {
+        alerts.push(<span key="today" style={{ color: 'red' }}>Expires Today Warning</span>);
+      } else if (diffDays <= 3) {
+        alerts.push(<span key="soon" style={{ color: 'orange' }}>Expiring Soon Clock</span>);
+      }
     }
-    alerts.push(
-      <span
-        key="discount"
-        style={{
-          background: '#4CAF50',
-          color: 'white',
-          padding: '4px 10px',
-          borderRadius: '16px',
-          fontSize: '12px',
-          fontWeight: 'bold',
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '4px',
-          marginLeft: '8px'
-        }}
-      >
-        {tagText}
-      </span>
-    );
-  }
 
-  return alerts;
-};
+    if (item.discountQty > 0) {
+      let tagText = '';
+      if (item.discountQty === 1) {
+        tagText = `Discounted ${item.discountPercent}%`;
+      } else {
+        const free = item.discountQty - 1;
+        tagText = `Buy 1 Get ${free} Free`;
+      }
 
+      alerts.push(
+        <span
+          key="discount"
+          style={{
+            background: '#4CAF50',
+            color: 'white',
+            padding: '4px 10px',
+            borderRadius: '16px',
+            fontSize: '12px',
+            fontWeight: 'bold',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '4px',
+            marginLeft: '8px'
+          }}
+        >
+          {tagText}
+        </span>
+      );
+    }
+
+    return alerts;
+  };
 
   const handleUpdateLocal = (updatedItem) => {
     setItemsState(prev => prev.map(i => i._id === updatedItem._id ? updatedItem : i));

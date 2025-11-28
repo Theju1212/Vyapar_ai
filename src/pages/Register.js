@@ -1,3 +1,4 @@
+// src/pages/Register.jsx
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../utils/api";
@@ -12,8 +13,9 @@ const Register = () => {
     email: "",
     phone: "",
     password: "",
-    storeName: "",  // 👈 added this
+    storeName: "",
   });
+
   const [error, setError] = useState("");
   const [toast, setToast] = useState({ message: "", type: "" });
   const navigate = useNavigate();
@@ -30,23 +32,31 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // backend returns: { token, user, store }
       const res = await API.post("/auth/register", form);
+
       login(res.data.token, res.data.user);
+
       showToast("✅ Registration successful!", "success");
-      setTimeout(() => navigate("/dashboard"), 1500);
+
+      setTimeout(() => navigate("/dashboard"), 1200);
     } catch (err) {
-      showToast(err.response?.data?.error || "❌ Something went wrong", "error");
-      setError(err.response?.data?.error || "Something went wrong");
+      const msg = err.response?.data?.message || "❌ Something went wrong";
+      showToast(msg, "error");
+      setError(msg);
     }
   };
 
   return (
     <>
       <Navbar />
+
       <div className="login-container">
         <div className="login-content auth-form">
           <h1>Create Account</h1>
+
           {error && <p className="error-text">{error}</p>}
+
           <form onSubmit={handleSubmit}>
             <input
               name="name"
@@ -88,7 +98,9 @@ const Register = () => {
             />
             <button type="submit">Register</button>
           </form>
+
           <GoogleButton className="google-btn" />
+
           <button
             onClick={() => navigate("/login")}
             className="forgot-password"
@@ -97,6 +109,7 @@ const Register = () => {
           </button>
         </div>
       </div>
+
       {toast.message && <div className={`toast ${toast.type}`}>{toast.message}</div>}
     </>
   );

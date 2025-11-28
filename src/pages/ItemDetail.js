@@ -1,7 +1,8 @@
+// src/pages/ItemDetail.jsx
 import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import client from '../api/client';
+import API from '../utils/api';   // ← FIXED
 import toast from 'react-hot-toast';
 import './ItemDetail.css';
 
@@ -17,7 +18,7 @@ export default function ItemDetail() {
   const { data, isLoading } = useQuery({
     queryKey: ['item', id],
     queryFn: async () => {
-      const res = await client.get(`/items/${id}`);
+      const res = await API.get(`/items/${id}`);   // ← FIXED
       return res.data;
     },
     enabled: !!id && id !== "new",
@@ -33,7 +34,7 @@ export default function ItemDetail() {
         storeId: "someStoreId" // replace with actual storeId
       };
       try {
-        await client.post('/items', payload);
+        await API.post('/items', payload);   // ← FIXED
         toast.success('Item created successfully');
         nav('/items');
       } catch (err) {
@@ -101,7 +102,7 @@ export default function ItemDetail() {
       return;
     }
     try {
-      await client.post('/sales', {
+      await API.post('/sales', {   // ← FIXED
         itemId: item._id,
         quantity: Number(sellQty)
       });
@@ -121,7 +122,7 @@ export default function ItemDetail() {
       return;
     }
     try {
-      await client.put(`/items/${id}`, {
+      await API.put(`/items/${id}`, {   // ← FIXED
         rackStock: item.rackStock + Number(refillQty),
         totalStock: item.totalStock + Number(refillQty)
       });
@@ -133,7 +134,6 @@ export default function ItemDetail() {
     }
   }
 
-  // Render item detail page
   return (
     <div className="item-detail-page">
       <h1>Manage Item</h1>
@@ -151,7 +151,7 @@ export default function ItemDetail() {
             value={item.storeType || storeType}
             onChange={async (e) => {
               try {
-                await client.put(`/items/${id}`, { storeType: e.target.value });
+                await API.put(`/items/${id}`, { storeType: e.target.value });   // ← FIXED
                 qc.invalidateQueries({ queryKey: ['item', id] });
                 toast.success('Store type updated');
               } catch (err) {
@@ -217,7 +217,7 @@ export default function ItemDetail() {
             e.preventDefault();
             const newDate = e.target.expiryDate.value;
             try {
-              await client.put(`/items/${id}`, { expiryDate: newDate });
+              await API.put(`/items/${id}`, { expiryDate: newDate });   // ← FIXED
               toast.success('Expiry date updated');
               qc.invalidateQueries({ queryKey: ['item', id] });
             } catch (err) {

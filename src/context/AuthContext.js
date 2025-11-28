@@ -15,11 +15,11 @@ export const AuthContext = createContext({
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-const [token, setToken] = useState(null);  // start clean
+  const [token, setToken] = useState(null);
   const [storeId, setStoreId] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Initialize auth from localStorage
+  // 🔹 Load token & user from localStorage on app start
   useEffect(() => {
     try {
       const storedToken = localStorage.getItem('AM_TOKEN');
@@ -30,41 +30,46 @@ const [token, setToken] = useState(null);  // start clean
           setUser({
             id: payload.userId,
             role: payload.role,
-            email: payload.email
+            email: payload.email,
+            storeId: payload.storeId
           });
-          setStoreId(payload.storeId || null);
+          setStoreId(payload.storeId);
           API.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
         } else {
           localStorage.removeItem('AM_TOKEN');
         }
-      } else {
-        localStorage.removeItem('AM_TOKEN');
       }
     } catch (err) {
-      console.warn('Auth initialization error', err);
+      console.warn('Auth init failed:', err);
       localStorage.removeItem('AM_TOKEN');
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // 🔹 Login — saves token + user data
+  // 🔹 Login (from Register or Login or Google)
   const login = (newToken, userData) => {
     if (!newToken) return;
+
     localStorage.setItem('AM_TOKEN', newToken);
     setToken(newToken);
 
     const payload = parseJwt(newToken);
+
+    // backend ALWAYS returns user + token
     setUser(userData || {
       id: payload?.userId,
+      email: payload?.email,
       role: payload?.role,
-      email: payload?.email
+      storeId: payload?.storeId
     });
-    setStoreId(payload?.storeId || null);
+
+    setStoreId(payload?.storeId);
+
     API.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
   };
 
-  // 🔹 Logout — clear all session data
+  // 🔹 Logout
   const logout = () => {
     localStorage.removeItem('AM_TOKEN');
     setUser(null);
@@ -73,7 +78,7 @@ const [token, setToken] = useState(null);  // start clean
     delete API.defaults.headers.common['Authorization'];
   };
 
-  // 🔹 Update user info manually (optional)
+  // 🔹 Update user manually
   const setUserFromServer = (updatedUser) => {
     setUser(updatedUser);
   };

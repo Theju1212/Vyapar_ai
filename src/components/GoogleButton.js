@@ -1,9 +1,10 @@
+// src/components/GoogleButton.jsx
 import React, { useContext } from 'react';
 import { useGoogleLogin } from '@react-oauth/google';
 import API from '../utils/api';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import '../pages/login.css'; // to apply button styles
+import '../pages/login.css';
 
 const GoogleButton = () => {
   const { login } = useContext(AuthContext);
@@ -18,28 +19,30 @@ const GoogleButton = () => {
             Authorization: `Bearer ${tokenResponse.access_token}`,
           },
         });
+
         const profile = await res.json();
         const { sub: googleId, email, name } = profile;
 
         // Send to backend
-        const backendRes = await API.post('/api/auth/google', { googleId, email, name });
+        const backendRes = await API.post('/auth/google', {
+          googleId,
+          email,
+          name
+        });
 
-        // Update global auth state
+        // Save auth
         login(backendRes.data.token, backendRes.data.user);
 
-        navigate('/dashboard'); // redirect after login
+        navigate('/dashboard');
       } catch (err) {
-        console.error('Google login failed', err);
+        console.error('Google login failed:', err);
       }
     },
     onError: (err) => console.error('Login Failed:', err),
   });
 
   return (
-    <button
-      className="google-btn"
-      onClick={() => googleLogin()}
-    >
+    <button className="google-btn" onClick={() => googleLogin()}>
       <img
         src="https://developers.google.com/identity/images/g-logo.png"
         alt="Google"
