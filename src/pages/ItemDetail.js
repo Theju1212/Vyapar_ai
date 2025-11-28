@@ -24,40 +24,40 @@ export default function ItemDetail() {
     enabled: !!id && id !== "new",
   });
 
-  // Handle new item creation
-  if (id === "new") {
-    const handleCreate = async (e) => {
-      e.preventDefault();
-      const payload = {
-        name: e.target.itemName.value,
-        storeType,
-        storeId: "someStoreId" // replace with actual storeId
-      };
-      try {
-        await API.post('/items', payload);   // ← FIXED
-        toast.success('Item created successfully');
-        nav('/items');
-      } catch (err) {
-        toast.error(err.response?.data?.error || err.message || 'Creation failed');
-      }
+// Handle new item creation
+if (id === "new") {
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    const payload = {
+      name: e.target.itemName.value,
+      storeType
     };
 
-    return (
-      <div className="item-detail-page">
-        <h1>Create New Item</h1>
-        <div className="card">
-          <form onSubmit={handleCreate} className="form-inline">
-            <input type="text" name="itemName" placeholder="Item Name" required />
-            <select value={storeType} onChange={e => setStoreType(e.target.value)}>
-              <option value="Kirana">Kirana</option>
-              <option value="General">General Store</option>
-            </select>
-            <button className="btn" type="submit">Create</button>
-          </form>
-        </div>
+    try {
+      await API.post('/items', payload); // ← correct route
+      toast.success('Item created successfully');
+      nav('/items');
+    } catch (err) {
+      toast.error(err.response?.data?.error || err.message || 'Creation failed');
+    }
+  };
+
+  return (
+    <div className="item-detail-page">
+      <h1>Create New Item</h1>
+      <div className="card">
+        <form onSubmit={handleCreate} className="form-inline">
+          <input type="text" name="itemName" placeholder="Item Name" required />
+          <select value={storeType} onChange={e => setStoreType(e.target.value)}>
+            <option value="Kirana">Kirana</option>
+            <option value="General">General Store</option>
+          </select>
+          <button className="btn" type="submit">Create</button>
+        </form>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   // Loading state
   if (isLoading) return (
