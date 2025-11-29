@@ -421,16 +421,15 @@ const Chatbot = () => {
     ].map(s => s.toLowerCase()));
     
     // --- Speech Recognition Handlers ---
-    // 🔥 STEP 2: startListening() is REPLACED
+    // 🔥 startListening() is REPLACED with the English priority solution:
     const startListening = () => {
         if (!recognition || isListening || isLoading) return;
 
-        // AUTO DETECT START: Try Telugu → Hindi → English
-        const possibleLangs = ["te-IN", "hi-IN", "en-US"];
+        // SOLUTION: START RECOGNITION IN ENGLISH (most browsers handle English best)
+        // The dynamic detection logic in handleResult will still switch the NEXT language.
+        recognition.lang = "en-US"; 
 
-        recognition.lang = possibleLangs[0]; // Begin with Telugu
-
-        console.log("🎤 Auto-language detection mode activated...");
+        console.log("🎤 Auto-language detection mode activated. Starting in English...");
 
         try {
             recognition.start();
@@ -550,7 +549,7 @@ const Chatbot = () => {
             }
             transcript = transcript.trim();
             
-            // 🔥 STEP 3: handleResult content is REPLACED
+            // 🔥 STEP 3: handleResult content remains the same (dynamic detection for next turn)
             if (transcript) {
                 console.log("Voice Transcript:", transcript);
 
@@ -629,7 +628,7 @@ const Chatbot = () => {
             >
                 <header className="chat-header">
                     <h1>AI Mart Assistant</h1>
-                    {/* 🔥 STEP 1: REMOVED the language selector UI here! */}
+                    {/* Language selector UI was previously removed as part of Step 1 */}
                     
                     <div id="bot-status" aria-live="polite">
                         <span id="bot-status-text">{botStatus.text}</span>
@@ -667,7 +666,7 @@ const Chatbot = () => {
                         <button
                             id="mic-button"
                             className={`chat-btn ${isListening ? 'is-listening' : ''}`}
-                            // The title no longer shows a "selected language" as it auto-detects dynamically
+                            // The title reflects the auto-detect mode
                             title={isListening ? "Stop listening" : `Ask with voice (Auto-Detect)`}
                             aria-label={isListening ? "Stop listening" : "Ask with voice"}
                             onClick={isListening ? stopListening : startListening}
