@@ -16,8 +16,8 @@ export default function Settings() {
   async function loadSettingsAndAlerts() {
     try {
       const [settingsRes, alertsRes] = await Promise.all([
-        API.get("/stores/settings"),
-        API.get("/stores/alerts"),
+        API.get("/api/stores/settings"),   // ✅ FIXED
+        API.get("/api/stores/alerts"),     // ✅ FIXED
       ]);
 
       const settings = settingsRes.data?.settings || {};
@@ -42,7 +42,8 @@ export default function Settings() {
   async function triggerAlertsManually() {
     setSendingAlert(true);
     try {
-      const res = await API.get("/stores/test-alerts");
+      const res = await API.get("/api/stores/test-alerts");  // ✅ FIXED
+
       if (res.data?.success) {
         toast.success("📨 Alert email sent successfully!");
         await loadSettingsAndAlerts();
@@ -61,7 +62,7 @@ export default function Settings() {
     e.preventDefault();
     setSaving(true);
 
-    // VALIDATIONS
+    // BASIC EMAIL VALIDATION
     if (!notificationEmail.trim()) {
       toast.error("Please enter a notification email 📧");
       setSaving(false);
@@ -72,15 +73,13 @@ export default function Settings() {
     const cleanPhone = notificationPhone.trim();
 
     try {
-      await API.put("/stores/settings", {
+      await API.put("/api/stores/settings", {   // ✅ FIXED
         autoRefill,
         notificationEmail: cleanEmail,
         notificationPhone: cleanPhone,
       });
 
       toast.success("Settings saved successfully 🎉");
-
-      // Reload settings to reflect updated MongoDB values
       await loadSettingsAndAlerts();
     } catch (err) {
       console.error("Save failed:", err);
