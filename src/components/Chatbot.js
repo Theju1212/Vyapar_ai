@@ -1,29 +1,25 @@
 import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
-
-// --- Trying import without extension again, matching App.jsx ---
 import { AuthContext } from '../context/AuthContext';
 
 // --- CSS Styles ---
-// Added styles for .language-selector
 const chatbotStyles = `
-    /* CSS provided by the user */
     .chat-container {
-        position: fixed; /* Changed to fixed */
-        bottom: 20px;    /* Position at the bottom */
-        right: 20px;     /* Position at the right */
-        z-index: 1000;   /* Stay on top of other content */
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
         background: rgba(255, 255, 255, 0.2);
         border-radius: 25px;
         backdrop-filter: blur(15px);
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         width: 90%;
-        max-width: 400px; /* Made it a bit smaller for a popup */
-        height: 60vh;     /* Adjusted height */
-        max-height: 500px; /* Max height */
+        max-width: 400px;
+        height: 60vh;
+        max-height: 500px;
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease; /* Added opacity transition */
+        transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
         font-family: 'Poppins', sans-serif;
     }
     .chat-container:hover {
@@ -33,42 +29,24 @@ const chatbotStyles = `
     .chat-header {
         background: linear-gradient(45deg, #F5BABB, #B568F8);
         color: #FFF5F2;
-        padding: 0.75rem 1.25rem; /* Adjusted padding */
+        padding: 0.75rem 1.25rem;
         display: flex;
-        /* justify-content: space-between; */ /* Let items flow naturally */
         align-items: center;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        cursor: grab; /* Added for clarity that it's a popup */
+        cursor: grab;
     }
     .chat-header h1 {
-        font-size: 1.1rem; /* Adjusted font size */
+        font-size: 1.1rem;
         font-weight: 600;
         margin: 0;
-        margin-right: 10px; /* Space between title and select */
-        white-space: nowrap; /* Prevent title wrapping */
+        white-space: nowrap;
     }
-    /* --- Styles for Language Selector --- */
-     .language-selector {
-        background-color: rgba(255, 255, 255, 0.2);
-        color: #FFF5F2;
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        border-radius: 8px;
-        padding: 4px 8px;
-        font-size: 0.8rem;
-        cursor: pointer;
-        outline: none;
-        margin-right: 10px; /* Space between select and status */
-     }
-     .language-selector option {
-        background-color: #B568F8; /* Match header gradient */
-        color: #FFF5F2;
-     }
     #bot-status {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        margin-left: auto; /* Push status to the far right */
-        white-space: nowrap; /* Prevent status wrapping */
+        margin-left: auto;
+        white-space: nowrap;
     }
     #bot-status span {
         font-size: 0.875rem;
@@ -79,7 +57,7 @@ const chatbotStyles = `
         border-radius: 50%;
         background: #FFF5F2;
         opacity: 0.7;
-        flex-shrink: 0; /* Prevent dot from shrinking */
+        flex-shrink: 0;
     }
     #bot-status div.status-idle { background: #9ca3af; }
     #bot-status div.status-thinking { background: #f59e0b; animation: pulse 1.5s infinite; }
@@ -90,7 +68,7 @@ const chatbotStyles = `
     }
     .chat-window {
         flex-grow: 1;
-        padding: 1rem; /* Adjusted padding */
+        padding: 1rem;
         overflow-y: auto;
         display: flex;
         flex-direction: column;
@@ -134,7 +112,7 @@ const chatbotStyles = `
         border-bottom-left-radius: 4px;
     }
     .chat-footer {
-        padding: 1rem; /* Adjusted padding */
+        padding: 1rem;
         background: rgba(255, 255, 255, 0.2);
         border-top: 1px solid rgba(255, 255, 255, 0.3);
     }
@@ -182,7 +160,6 @@ const chatbotStyles = `
         width: 46px;
         height: 46px;
         border-radius: 14px;
-        text-decoration: none;
         border: none;
         background: linear-gradient(45deg, #F5BABB, #B568F8);
         color: #FFF5F2;
@@ -223,13 +200,11 @@ const chatbotStyles = `
         70% { box-shadow: 0 0 0 10px rgba(255, 77, 77, 0); }
         100% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); }
     }
-
-    /* --- Chatbot Visibility Toggle --- */
     .chat-toggle-button {
         position: fixed;
         bottom: 20px;
         right: 20px;
-        z-index: 1001; /* Above the chat window */
+        z-index: 1001;
         width: 60px;
         height: 60px;
         border-radius: 50%;
@@ -252,7 +227,6 @@ const chatbotStyles = `
         height: 32px;
     }
     .chat-container.hidden {
-        /* Updated animation for hiding */
         transform: scale(0.8) translateY(50px) translateX(50px);
         opacity: 0;
         pointer-events: none;
@@ -260,7 +234,6 @@ const chatbotStyles = `
 `;
 
 // --- SVG Icons ---
-// ... (Keep existing SVG Icon components) ...
 const MicIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15c-3.314 0-6-2.686-6-6v-1.5a6 6 0 1112 0v1.5c0 3.314-2.686 6-6 6z" />
@@ -284,59 +257,50 @@ const CloseIcon = () => (
       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
     </svg>
 );
-// --- End SVG Icons ---
 
 // --- Speech Recognition Setup ---
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 let recognition = null;
 if (SpeechRecognition) {
     recognition = new SpeechRecognition();
-    recognition.continuous = false; // Stop listening after first pause
-    // recognition.lang will be set dynamically
-    recognition.interimResults = false; // Process final result only
+    recognition.continuous = false;
+    recognition.interimResults = false;
 }
 
-// --- Text-to-Speech Setup ---
-const speakText = (text, setStatus, botStatusRef) => { // Pass botStatusRef
-    if (!window.speechSynthesis || !text) return; // Add check for empty text
+// --- Text-to-Speech ---
+const speakText = (text, setStatus, botStatusRef) => {
+    if (!window.speechSynthesis || !text) return;
     const utterance = new SpeechSynthesisUtterance(text);
 
-    // Simple language detection for TTS voice
-    if (/[\u0900-\u097F]/.test(text)) { // Hindi characters
+    if (/[\u0900-\u097F]/.test(text)) {
          utterance.lang = 'hi-IN';
-    } else if (/[\u0C00-\u0C7F]/.test(text)) { // Telugu characters
+    } else if (/[\u0C00-\u0C7F]/.test(text)) {
          utterance.lang = 'te-IN';
-    } else { // Default to English
+    } else {
          utterance.lang = 'en-US';
     }
 
-    // Ensure status is updated correctly, even if speech ends quickly
     let speaking = false;
     utterance.onstart = () => {
          speaking = true;
          setStatus({ text: 'Speaking', dot: 'status-speaking' });
-    }
+    };
     utterance.onend = () => {
          speaking = false;
-         // Check if another speech has started before setting to idle
-         // Also check if the user manually stopped it (ref might be Idle already)
          if (!window.speechSynthesis.speaking && botStatusRef.current.text !== 'Idle') {
              setStatus({ text: 'Idle', dot: 'status-idle' });
          }
-    }
-     utterance.onerror = (event) => {
+    };
+    utterance.onerror = (event) => {
          console.error("SpeechSynthesis Error:", event.error);
-         speaking = false;
-         setStatus({ text: 'Idle', dot: 'status-idle' }); // Reset status on error
-     };
+         setStatus({ text: 'Idle', dot: 'status-idle' });
+    };
 
-    window.speechSynthesis.cancel(); // Cancel any previous speech
-    // Add small delay before speaking to allow cancel to work reliably
+    window.speechSynthesis.cancel();
     setTimeout(() => window.speechSynthesis.speak(utterance), 50);
 };
 
-
-// --- The React Component ---
+// --- Main Component ---
 const Chatbot = () => {
     const [messages, setMessages] = useState([
         { sender: 'bot', text: "Hello! Ask me about your inventory in English." }
@@ -347,148 +311,102 @@ const Chatbot = () => {
     const [botStatus, setBotStatus] = useState({ text: 'Idle', dot: 'status-idle' });
     const [isOpen, setIsOpen] = useState(false);
     const chatWindowRef = useRef(null);
-
-    // NEW: State for selected language for voice input
-    const [selectedLanguage, setSelectedLanguage] = useState('en-US'); // Default to English
-
-    // NEW: Ref to keep track of bot status for TTS onend handler
     const botStatusRef = useRef(botStatus);
+
+    const { token } = useContext(AuthContext);
+    const backendApiUrl = 'https://statelevel-backend.onrender.com/api/chat';
+
     useEffect(() => {
         botStatusRef.current = botStatus;
     }, [botStatus]);
 
-
-    // GET THE TOKEN FROM CONTEXT
-    const { token } = useContext(AuthContext);
-
-    // Your server is running on port 5000
-    const backendApiUrl = 'https://statelevel-backend.onrender.com/api/chat';
-
-
-    // Inject CSS into the document head
+    // Inject CSS
     useEffect(() => {
-         const styleElement = document.createElement('style');
-        styleElement.id = 'chatbot-styles';
-        styleElement.innerHTML = chatbotStyles;
-        document.head.appendChild(styleElement);
+        const style = document.createElement('style');
+        style.id = 'chatbot-styles';
+        style.innerHTML = chatbotStyles;
+        document.head.appendChild(style);
         return () => {
-            const existingStyleElement = document.getElementById('chatbot-styles');
-            if (existingStyleElement) document.head.removeChild(existingStyleElement);
+            const el = document.getElementById('chatbot-styles');
+            if (el) document.head.removeChild(el);
         };
     }, []);
 
-    // Auto-scroll to bottom
+    // Auto scroll
     useEffect(() => {
-         if (chatWindowRef.current) {
+        if (chatWindowRef.current) {
             chatWindowRef.current.scrollTo({
-                 top: chatWindowRef.current.scrollHeight,
-                 behavior: 'smooth'
+                top: chatWindowRef.current.scrollHeight,
+                behavior: 'smooth'
             });
         }
     }, [messages]);
 
-    // Greet user on first open & handle closing
+    // Greet on open
     useEffect(() => {
-         if (isOpen && messages.length === 1) {
+        if (isOpen && messages.length === 1) {
             setTimeout(() => {
-                // Pass botStatusRef to speakText
                 speakText("Hello! I am your AI Mart assistant.", setBotStatus, botStatusRef);
             }, 500);
         }
-         return () => { // Cleanup when isOpen changes or component unmounts
-             if (!isOpen) { // If closing the chat window
-                 window.speechSynthesis.cancel(); // Stop any ongoing speech
-                 if (recognition && isListening) { // Stop listening if active
-                     try { recognition.abort(); } catch(e){}
-                     setIsListening(false);
-                 }
-                 // Reset status immediately on close, unless it was already Idle
-                  if (botStatusRef.current.text !== 'Idle') {
-                     setBotStatus({ text: 'Idle', dot: 'status-idle' });
-                 }
-             }
-         };
-         // Pass botStatusRef to speakText in dependencies if needed, but likely not
-    }, [isOpen, messages.length, isListening]); // Added isListening to dependencies
+        return () => {
+            if (!isOpen) {
+                window.speechSynthesis.cancel();
+                if (recognition && isListening) recognition.abort();
+            }
+        };
+    }, [isOpen, messages.length]);
 
-     // STOP-speaking phrases (typed or spoken). include English, Hindi, Telugu variants
-  const STOP_PHRASES = new Set([
-    'stop', 'stop speaking', 'end', 'end speaking', 'quit', 'stop please', 'please stop',
-    'chup', 'chup raho', 'ruk jao', // Hindi casual
-    'nenu nilabettanu', // Telugu (example)
-    'matladaku', 'oceanunu', 'ఆపు మాట్లాడటం', 'ఆపు', 'మాట్లాడకండి', // Telugu variants
-    'चुप रहो', 'बंद करो', 'बोलना बंद करो' // Hindi variants
-  ].map(s => s.toLowerCase()));
-    // --- Speech Recognition Handlers ---
- const startListening = () => {
-    if (!recognition || isListening || isLoading) return;
+    // START LISTENING WITH AUTO DETECTION
+    const startListening = () => {
+        if (!recognition || isListening || isLoading) return;
 
-    // AUTO DETECT START: Try Telugu → Hindi → English
-    const possibleLangs = ["te-IN", "hi-IN", "en-US"];
+        recognition.lang = "te-IN"; // Start with Telugu (will auto-switch on result)
 
-    recognition.lang = possibleLangs[0]; // Begin with Telugu
+        console.log("Auto-language detection mode activated...");
 
-    console.log("🎤 Auto-language detection mode activated...");
-
-    try {
-        recognition.start();
-        setIsListening(true);
-        setBotStatus({ text: "Listening...", dot: "status-speaking" });
-    } catch (e) {
-        console.error("Error starting recognition:", e);
-        setIsListening(false);
-        setBotStatus({ text: "Idle", dot: "status-idle" });
-    }
-};
-
+        try {
+            recognition.start();
+            setIsListening(true);
+            setBotStatus({ text: "Listening...", dot: "status-speaking" });
+        } catch (e) {
+            console.error("Error starting recognition:", e);
+            setIsListening(false);
+            setBotStatus({ text: 'Idle', dot: 'status-idle' });
+        }
+    };
 
     const stopListening = useCallback(() => {
-         if (!recognition || !isListening) return;
-        try { recognition.stop(); }
-        catch(e) { console.warn("Recognition stop error:", e); }
-        finally {
-             setIsListening(false);
-             // Use ref here as state might be stale
-             if (!isLoading && botStatusRef.current.text !== 'Thinking') {
-                 setBotStatus({ text: 'Idle', dot: 'status-idle' });
-             }
+        if (!recognition || !isListening) return;
+        try { recognition.stop(); } catch(e) {}
+        setIsListening(false);
+        if (!isLoading && botStatusRef.current.text !== 'Thinking') {
+            setBotStatus({ text: 'Idle', dot: 'status-idle' });
         }
-    }, [recognition, isListening, isLoading]); // isLoading needed
+    }, [isLoading]);
 
-    // --- Chat Send Handler ---
     const handleSend = useCallback(async (messageText = null) => {
         const text = (typeof messageText === 'string' ? messageText.trim() : input.trim());
         if (text === '' || isLoading) return;
 
-        // --- NEW: Handle "stop speaking" command ---
-        const lowerCaseText = text.toLowerCase();
-        // Added Telugu command - adjust if needed
-        const stopCommands = ['stop speaking', 'chup raho', 'matladaku', 'ఆపు మాట్లాడటం']; // Added Telugu
-        if (stopCommands.includes(lowerCaseText)) {
-            console.log("Stop speaking command received.");
-            window.speechSynthesis.cancel(); // Stop TTS
-            setBotStatus({ text: 'Idle', dot: 'status-idle' }); // Update status
-            // Only clear input if command was typed, not spoken
-            if (messageText === null) {
-                 setInput('');
-            }
-            // Optionally add a confirmation message
-            // setMessages(prev => [...prev, { sender: 'bot', text: "Okay, I've stopped speaking." }]);
-            return; // Exit without sending to backend
+        const lower = text.toLowerCase();
+        if (['stop', 'stop speaking', 'chup', 'chup raho', 'matladaku', 'ఆపు', 'ఆపు మాట్లాడటం'].some(cmd => lower.includes(cmd))) {
+            window.speechSynthesis.cancel();
+            setBotStatus({ text: 'Idle', dot: 'status-idle' });
+            if (messageText === null) setInput('');
+            return;
         }
-        // --- End Stop Speaking Logic ---
 
-        if (messageText === null) setInput(''); // Clear typed input
-
+        if (messageText === null) setInput('');
         setMessages(prev => [...prev, { sender: 'user', text }]);
         setIsLoading(true);
         setBotStatus({ text: 'Thinking', dot: 'status-thinking' });
-        window.speechSynthesis.cancel(); // Cancel previous speech before new request
+        window.speechSynthesis.cancel();
 
         try {
-            if (!token) throw new Error('Authentication token is missing. Please log in.');
+            if (!token) throw new Error('Authentication token is missing.');
 
-            const response = await fetch(backendApiUrl, {
+            const res = await fetch(backendApiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -497,149 +415,98 @@ const Chatbot = () => {
                 body: JSON.stringify({ query: text })
             });
 
-            if (!response.ok) {
-                 if (response.status === 401 || response.status === 403) {
-                     throw new Error('Authentication failed. Please log in again.');
-                 }
-                 let errorBody = `Server error ${response.status}`;
-                 try { const errorJson = await response.json(); errorBody = errorJson.error || JSON.stringify(errorJson); }
-                 catch { try { errorBody = await response.text(); } catch {} }
-                 console.error(`Server Error ${response.status}: ${errorBody}`);
-                 throw new Error(errorBody);
-            }
+            if (!res.ok) throw new Error(`Server error ${res.status}`);
 
-            const data = await response.json();
-            const botResponse = data?.reply || "I received a response, but couldn't understand it.";
+            const data = await res.json();
+            const botReply = data?.reply || "Sorry, I didn't understand the response.";
 
-            setMessages(prev => [...prev, { sender: 'bot', text: botResponse }]);
-            // Pass botStatusRef to speakText
-            speakText(botResponse, setBotStatus, botStatusRef);
+            setMessages(prev => [...prev, { sender: 'bot', text: botReply }]);
+            speakText(botReply, setBotStatus, botStatusRef);
 
-        } catch (error) {
-             console.error("Error fetching/processing backend:", error);
-             let errorMsg = "An unexpected error occurred.";
-              if (error.message.includes('Authentication') || error.message.includes('token is missing')) {
-                  errorMsg = 'Authentication failed. Please log in again.';
-             } else if (error.message.includes('Failed to fetch')) {
-                  errorMsg = "Sorry, I couldn't connect to the server. Is it running?";
-             } else { errorMsg = `Error: ${error.message}`; }
-
-             setMessages(prev => [...prev, { sender: 'bot', text: errorMsg }]);
-             // Pass botStatusRef to speakText
-             speakText(errorMsg, setBotStatus, botStatusRef); // Speak the error
+        } catch (err) {
+            console.error(err);
+            const errMsg = err.message.includes('token') ? 'Please log in again.' : 'Server error, try again.';
+            setMessages(prev => [...prev, { sender: 'bot', text: errMsg }]);
+            speakText(errMsg, setBotStatus, botStatusRef);
         } finally {
             setIsLoading(false);
-            // TTS onend handler will manage Idle status, unless it failed to start
-            if (!window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
-                 // Use ref to check status before resetting
-                 setBotStatus(prevStatus => prevStatus.text === 'Speaking' ? prevStatus : { text: 'Idle', dot: 'status-idle' });
-             }
         }
-    }, [input, token, backendApiUrl, isLoading, /* Dependencies for state setters */ setMessages, setInput, setIsLoading, setBotStatus ]);
+    }, [input, token, isLoading]);
 
-    // Setup recognition event handlers
-     useEffect(() => {
+    // Speech Recognition Events
+    useEffect(() => {
         if (!recognition) return;
 
-       const handleResult = (event) => {
-           let transcript = '';
-           for (let i = event.resultIndex; i < event.results.length; ++i) {
-               if (event.results[i].isFinal) { transcript += event.results[i][0].transcript; }
-           }
-           transcript = transcript.trim();
-           if (transcript) {
-               console.log("Voice Transcript:", transcript);
-               setInput(transcript); // Set input immediately
-               handleSend(transcript); // Send immediately
-           } else { console.log("Empty transcript received."); }
-           // Stop listening is handled by 'end' event
-       };
+        const handleResult = (event) => {
+            let transcript = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                if (event.results[i].isFinal) {
+                    transcript += event.results[i][0].transcript;
+                }
+            }
+            transcript = transcript.trim();
+            if (!transcript) return;
 
-       const handleError = (event) => {
-           console.error("Speech recognition error:", event.error, event.message);
-           let errorFeedback = `Voice recognition error: ${event.error}.`;
-           if (event.error === 'no-speech') errorFeedback = "I didn't hear anything. Try speaking again.";
-           else if (event.error === 'audio-capture') errorFeedback = "Couldn't access microphone. Check permissions.";
-           else if (event.error === 'not-allowed') errorFeedback = "Microphone access denied. Allow access in browser settings.";
-           else if (event.error === 'network') errorFeedback = "Network error during voice recognition.";
+            console.log("Voice Transcript:", transcript);
 
-           setMessages(prev => [...prev, { sender: 'bot', text: errorFeedback }]);
-           stopListening(); // Ensure stop on error
-       };
+            // AUTO LANGUAGE DETECTION
+            let detectedLang = "en-US";
+            if (/[\u0C00-\u0C7F]/.test(transcript)) {
+                detectedLang = "te-IN";
+            } else if (/[\u0900-\u097F]/.test(transcript)) {
+                detectedLang = "hi-IN";
+            }
+            console.log("Detected Language:", detectedLang);
 
-       const handleEnd = () => {
-           console.log("Speech recognition ended.");
-           // This ensures state is updated even if stopListening wasn't triggered elsewhere
-           if (isListening) { stopListening(); }
-       };
+            // Switch engine to detected language for better accuracy next time
+            recognition.lang = detectedLang;
 
-       recognition.addEventListener('result', handleResult);
-       recognition.addEventListener('error', handleError);
-       recognition.addEventListener('end', handleEnd);
+            setInput(transcript);
+            handleSend(transcript);
+        };
 
-       return () => { // Cleanup
-           recognition.removeEventListener('result', handleResult);
-           recognition.removeEventListener('error', handleError);
-           recognition.removeEventListener('end', handleEnd);
-           if (isListening) {
-               try { recognition.abort(); } catch(e){}
-                setIsListening(false);
-                // Ensure status resets correctly if unmounting while listening
-                setBotStatus(prev => prev.text === 'Listening...' ? { text: 'Idle', dot: 'status-idle' } : prev);
-           }
-       };
-    }, [isListening, stopListening, handleSend]); // handleSend needed as it's called in handleResult
+        const handleError = (event) => {
+            console.error("Speech error:", event.error);
+            stopListening();
+        };
+
+        const handleEnd = () => {
+            if (isListening) stopListening();
+        };
+
+        recognition.addEventListener('result', handleResult);
+        recognition.addEventListener('error', handleError);
+        recognition.addEventListener('end', handleEnd);
+
+        return () => {
+            recognition.removeEventListener('result', handleResult);
+            recognition.removeEventListener('error', handleError);
+            recognition.removeEventListener('end', handleEnd);
+        };
+    }, [isListening, stopListening, handleSend]);
 
     return (
         <>
-            {/* --- Chat Toggle Button --- */}
             <button
                 className="chat-toggle-button"
                 onClick={() => setIsOpen(!isOpen)}
                 title="Toggle AI Chat"
-                aria-label={isOpen ? "Close AI Chat" : "Open AI Chat"}
             >
                 {isOpen ? <CloseIcon /> : <ChatIcon />}
             </button>
 
-            {/* --- Chat Window --- */}
-            <div
-                className={`chat-container ${isOpen ? '' : 'hidden'}`}
-                aria-hidden={!isOpen}
-            >
+            <div className={`chat-container ${isOpen ? '' : 'hidden'}`}>
                 <header className="chat-header">
                     <h1>AI Mart Assistant</h1>
-                     {/* --- NEW: Language Selector Dropdown --- */}
-                <select
-  className="language-selector"
-  value={selectedLanguage}
-  onChange={(e) => {
-      setSelectedLanguage(e.target.value);
-      if (isListening) stopListening();
-  }}
-  aria-label="Select voice input language"
-  disabled={isListening}
->
-  <option value="en-US">English</option>
-  <option value="hi-IN">Hindi</option>
-  <option value="te-IN">Telugu</option>
-</select>
-
                     <div id="bot-status" aria-live="polite">
-                        <span id="bot-status-text">{botStatus.text}</span>
-                        <div id="bot-status-dot" className={botStatus.dot}></div>
+                        <span>{botStatus.text}</span>
+                        <div className={botStatus.dot}></div>
                     </div>
                 </header>
 
-                <div
-                    id="chat-window"
-                    className="chat-window"
-                    ref={chatWindowRef}
-                    role="log"
-                    aria-relevant="additions text"
-                   >
-                    {messages.map((msg, index) => (
-                        <div key={index} className={`chat-message ${msg.sender}`} role="listitem">
+                <div id="chat-window" className="chat-window" ref={chatWindowRef}>
+                    {messages.map((msg, i) => (
+                        <div key={i} className={`chat-message ${msg.sender}`}>
                             <div>
                                 <p dangerouslySetInnerHTML={{ __html: msg.text.replace(/\n/g, '<br />') }} />
                             </div>
@@ -648,51 +515,39 @@ const Chatbot = () => {
                 </div>
 
                 <footer className="chat-footer">
-                    {/* Loading Indicator */}
                     {isLoading && (
-                        <div id="loading-indicator" role="status" aria-live="polite">
-                            <div className="spinner" aria-hidden="true"></div>
+                        <div id="loading-indicator">
+                            <div className="spinner"></div>
                             <span>AI is thinking...</span>
                         </div>
                     )}
-                    {/* Input Row */}
                     <div className="input-row">
-                        {/* Mic Button */}
                         <button
                             id="mic-button"
                             className={`chat-btn ${isListening ? 'is-listening' : ''}`}
-                            // NEW: Updated title to reflect selected language
-                            title={isListening ? "Stop listening" : `Ask with voice (${selectedLanguage.split('-')[0]})`}
-                            aria-label={isListening ? "Stop listening" : "Ask with voice"}
+                            title={isListening ? "Stop" : "Speak (auto-detect language)"}
                             onClick={isListening ? stopListening : startListening}
-                            disabled={!recognition || isLoading} // Disable if speech not supported or AI is thinking
+                            disabled={!recognition || isLoading}
                         >
                             <MicIcon />
                         </button>
-                        {/* Text Input */}
                         <input
                             type="text"
                             id="chat-input"
-                            aria-label="Chat message input"
-                             // NEW: Updated placeholder
-                            placeholder="Type 'stop speaking' or use mic..."
+                            placeholder="Type or speak..."
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' && !e.shiftKey && !isLoading) {
                                     e.preventDefault();
-                                    handleSend(null); // Explicitly pass null for typed messages
+                                    handleSend();
                                 }
                             }}
                             disabled={isLoading}
                         />
-                        {/* Send Button */}
                         <button
-                            id="send-button"
                             className="chat-btn"
-                            title="Send message"
-                            aria-label="Send message"
-                            onClick={() => handleSend(null)} // Explicitly pass null for button click
+                            onClick={() => handleSend()}
                             disabled={isLoading || input.trim() === ''}
                         >
                             <SendIcon />
@@ -705,4 +560,3 @@ const Chatbot = () => {
 };
 
 export default Chatbot;
-
