@@ -411,21 +411,36 @@ const Chatbot = () => {
          // Pass botStatusRef to speakText in dependencies if needed, but likely not
     }, [isOpen, messages.length, isListening]); // Added isListening to dependencies
 
+     // STOP-speaking phrases (typed or spoken). include English, Hindi, Telugu variants
+  const STOP_PHRASES = new Set([
+    'stop', 'stop speaking', 'end', 'end speaking', 'quit', 'stop please', 'please stop',
+    'chup', 'chup raho', 'ruk jao', // Hindi casual
+    'nenu nilabettanu', // Telugu (example)
+    'matladaku', 'oceanunu', 'ఆపు మాట్లాడటం', 'ఆపు', 'మాట్లాడకండి', // Telugu variants
+    'चुप रहो', 'बंद करो', 'बोलना बंद करो' // Hindi variants
+  ].map(s => s.toLowerCase()));
     // --- Speech Recognition Handlers ---
-    const startListening = () => {
-        if (!recognition || isListening || isLoading) return;
-        recognition.lang = selectedLanguage; // Use selected language
-        console.log("Starting listening in:", selectedLanguage);
-        try {
-            recognition.start();
-            setIsListening(true);
-            setBotStatus({ text: 'Listening...', dot: 'status-speaking' });
-        } catch (e) {
-            console.error("Error starting recognition:", e);
-            setIsListening(false);
-            setBotStatus({ text: 'Idle', dot: 'status-idle' });
-        }
-    };
+ const startListening = () => {
+    if (!recognition || isListening || isLoading) return;
+
+    // AUTO DETECT START: Try Telugu → Hindi → English
+    const possibleLangs = ["te-IN", "hi-IN", "en-US"];
+
+    recognition.lang = possibleLangs[0]; // Begin with Telugu
+
+    console.log("🎤 Auto-language detection mode activated...");
+
+    try {
+        recognition.start();
+        setIsListening(true);
+        setBotStatus({ text: "Listening...", dot: "status-speaking" });
+    } catch (e) {
+        console.error("Error starting recognition:", e);
+        setIsListening(false);
+        setBotStatus({ text: "Idle", dot: "status-idle" });
+    }
+};
+
 
     const stopListening = useCallback(() => {
          if (!recognition || !isListening) return;
@@ -595,20 +610,21 @@ const Chatbot = () => {
                 <header className="chat-header">
                     <h1>AI Mart Assistant</h1>
                      {/* --- NEW: Language Selector Dropdown --- */}
-                     <select
-                         className="language-selector"
-                         value={selectedLanguage}
-                         onChange={(e) => {
-                             setSelectedLanguage(e.target.value);
-                             // Optional: Stop listening if language is changed mid-session
-                             if (isListening) stopListening();
-                         }}
-                         aria-label="Select voice input language"
-                         disabled={isListening} // Disable while listening
-                     >
-                         <option value="en-US">English</option>
-                
-                     </select>
+                <select
+  className="language-selector"
+  value={selectedLanguage}
+  onChange={(e) => {
+      setSelectedLanguage(e.target.value);
+      if (isListening) stopListening();
+  }}
+  aria-label="Select voice input language"
+  disabled={isListening}
+>
+  <option value="en-US">English</option>
+  <option value="hi-IN">Hindi</option>
+  <option value="te-IN">Telugu</option>
+</select>
+
                     <div id="bot-status" aria-live="polite">
                         <span id="bot-status-text">{botStatus.text}</span>
                         <div id="bot-status-dot" className={botStatus.dot}></div>
