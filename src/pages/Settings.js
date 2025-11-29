@@ -21,6 +21,7 @@ export default function Settings() {
       ]);
 
       const settings = settingsRes.data?.settings || {};
+
       setAutoRefill(Boolean(settings.autoRefill));
       setNotificationEmail(settings.notificationEmail || "");
       setNotificationPhone(settings.notificationPhone || "");
@@ -41,7 +42,7 @@ export default function Settings() {
   async function triggerAlertsManually() {
     setSendingAlert(true);
     try {
-      const res = await API.get("/test-alerts");
+      const res = await API.get("/stores/test-alerts");
       if (res.data?.success) {
         toast.success("📨 Alert email sent successfully!");
         await loadSettingsAndAlerts();
@@ -59,13 +60,28 @@ export default function Settings() {
   async function save(e) {
     e.preventDefault();
     setSaving(true);
+
+    // VALIDATIONS
+    if (!notificationEmail.trim()) {
+      toast.error("Please enter a notification email 📧");
+      setSaving(false);
+      return;
+    }
+
+    const cleanEmail = notificationEmail.trim();
+    const cleanPhone = notificationPhone.trim();
+
     try {
       await API.put("/stores/settings", {
         autoRefill,
-        notificationEmail,
-        notificationPhone,
+        notificationEmail: cleanEmail,
+        notificationPhone: cleanPhone,
       });
+
       toast.success("Settings saved successfully 🎉");
+
+      // Reload settings to reflect updated MongoDB values
+      await loadSettingsAndAlerts();
     } catch (err) {
       console.error("Save failed:", err);
       toast.error("Save failed");
@@ -102,6 +118,7 @@ export default function Settings() {
               type="email"
               value={notificationEmail}
               onChange={(e) => setNotificationEmail(e.target.value)}
+              required
             />
           </label>
 
@@ -111,6 +128,7 @@ export default function Settings() {
               type="tel"
               value={notificationPhone}
               onChange={(e) => setNotificationPhone(e.target.value)}
+              placeholder="Optional"
             />
           </label>
 
@@ -134,11 +152,13 @@ export default function Settings() {
 
       <div className="card" style={{ marginTop: "2rem" }}>
         <h2>📩 Latest Email Alert</h2>
+
         {lastAlertDate && (
           <p className="muted">
             Sent on {new Date(lastAlertDate).toLocaleString()}
           </p>
         )}
+
         {lastAlertCopy ? (
           <div
             className="alert-preview"
